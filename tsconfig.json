@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "experimentalDecorators": true,
+    "allowJs": true,
+    "paths": {
+      "@assets/*": ["@assets/*"],
+      "@shared-assets/*": ["app/components/shared/assets/*"]
+    },
+    "noEmit": true
+  }
+}

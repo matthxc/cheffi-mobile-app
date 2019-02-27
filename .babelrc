@@ -1,0 +1,9 @@
+{
+  "presets": ["module:metro-react-native-babel-preset"],
+  "plugins": ["styled-components"],
+  "env": {
+    "production": {
+      "plugins": ["lodash", "transform-react-remove-prop-types"]
+    },
+  }
+}

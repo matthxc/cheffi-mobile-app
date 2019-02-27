@@ -1,23 +1,133 @@
 {
-  "name": "cheffiApp",
+  "name": "CheffiMobileClient",
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest"
+    "android": "react-native run-android",
+    "ios": "react-native run-ios --simulator=\"iPhone 7\"",
+    "rename": "node ./bin/rename.js",
+    "start": "react-native start",
+    "start:nocache": "react-native start --reset-cache",
+    "test": "jest",
+    "test:components": "jest --setupTestFrameworkScriptFile=./__tests__/__setup__/setupEnzymeJSDOM.js --testMatch='**/__tests__/**/*.component-test.js'",
+    "test:storyshots": "jest --testMatch='**/__tests__/**/*.storyshots.js'",
+    "test:screens:ios": "loki test --configurationFilter ios --difference ./.loki/iphone7/difference --reference ./.loki/iphone7/reference --output ./.loki/iphone7/current --chromeTolerance=5 --diffingEngine=\"gm\"",
+    "test:screens:init:ios": "loki update --configurationFilter ios --reference ./.loki/iphone7/reference --output ./.loki/iphone7/current",
+    "test:screens:changed:ios": "loki approve --configurationFilter ios --reference ./.loki/iphone7/reference --output ./.loki/iphone7/current",
+    "test:screens:android": "loki test --configurationFilter android --difference ./.loki/androidNexusSAPIP/difference --reference ./.loki/androidNexusSAPIP/reference --output ./.loki/androidNexusSAPIP/current --chromeTolerance=5 --diffingEngine=\"gm\"",
+    "test:screens:init:android": "loki update --configurationFilter android --reference ./.loki/androidNexusSAPIP/reference --output ./.loki/androidNexusSAPIP/current",
+    "test:screens:changed:android": "loki approve --configurationFilter android --reference ./.loki/androidNexusSAPIP/reference --output ./.loki/androidNexusSAPIP/current",
+    "test:screens": "loki test",
+    "test:screens:initial": "loki update",
+    "test:screens:changed": "loki approve",
+    "test:e2e:ios": "detox test --reuse -c ios.sim.debug -l info -f 'address-selection.spec'",
+    "test:e2e:ios:all": "detox test --reuse -c ios.sim.debug -l info",
+    "test:e2e:start": "RN_SRC_EXT=e2emock.js react-native start",
+    "test:e2e:ios:build": "RN_SRC_EXT=e2emock.js detox build -c ios.sim.debug",
+    "storybook": "react-native start --projectRoot storybook",
+    "storybook:browser": "storybook start | react-native start --projectRoot storybook",
+    "storybook:screenshots": "storybook start | react-native start --projectRoot storybook/loki",
+    "eslint": "./node_modules/.bin/eslint -c .eslintrc.json —ext .js .",
+    "eslint:fix": "./node_modules/.bin/eslint --fix -c .eslintrc.json —ext .js .",
+    "gen-debug-apk": "react-native bundle --dev false --platform android --entry-file index.js --bundle-output ./android/app/build/intermediates/assets/debug/index.android.bundle --assets-dest ./android/app/build/intermediates/res/merged/debug && cd android && ./gradlew assembleDebug",
+    "gen-release-apk": "cd android && ./gradlew assembleRelease --no-configure-on-demand",
+    "postversion": "./node_modules/.bin/react-native-version -B",
+    "open-debugger": "open \"rndebugger://set-debugger-loc?host=localhost&port=8081\"",
+    "appicon-assets": "yo rn-toolbox:assets --icon assets/appicon.png --store",
+    "notification-icon-assets": "yo rn-toolbox:assets --android-notification-icon assets/ic_notification.png",
+    "adb-apk": "cd android/app/build/outputs/apk/debug && adb install -r app-debug.apk",
+    "adb-apk-release": "cd android/app/build/outputs/apk/release && adb install -r app-release.apk",
+    "clean-gradle": "cd android && ./gradlew clean",
+    "log-android": "react-native log-android",
+    "log-ios": "react-native log-ios",
+    "increment-build": "./node_modules/.bin/react-native-version -b",
+    "logcat": "adb logcat *:W",
+    "start-debugview": "adb shell setprop debug.firebase.analytics.app com.heraclea.cibiclient",
+    "stop-debugview": "adb shell setprop debug.firebase.analytics.app .none.",
+    "run-clean-ios": "rm -rf yarn.lock && rm -rf node_modules && rm -rf ~/.rncache && yarn && cd ios && rm -rf Pods && rm -rf Podfile.lock && pod install && rm -rf build && cd .. && yarn run ios",
+    "rebuild-ios": "cd ios && rm -rf Pods && pod install && rm -rf build && cd .. && yarn run ios",
+    "flow": "flow"
   },
   "dependencies": {
     "react": "16.6.3",
-    "react-native": "0.58.5"
+    "react-native": "0.58.5",
+    "axios": "^0.18.0",
+    "lodash": "^4.17.11",
+    "memoizee": "^0.4.14",
+    "moment": "^2.24.0",
+    "prop-types": "15.7.2",
+    "recompose": "^0.30.0",
+    "immutable": "4.0.0-rc.12",
+    "reselect": "4.0.0",
+    "redux": "^4.0.1",
+    "react-redux": "6.0.1",
+    "redux-saga": "1.0.2",
+    "redux-thunk": "2.3.0",
+    "redux-saga-requests": "^0.22.1",
+    "redux-saga-requests-axios": "^0.7.6",
+    "styled-components": "4.1.3"
   },
   "devDependencies": {
+    "@storybook/addon-storyshots": "^4.1.13",
+    "@storybook/addon-actions": "^4.1.13",
+    "@storybook/addon-knobs": "^4.1.13",
+    "@storybook/addon-links": "^4.1.13",
+    "@storybook/addon-notes": "^4.1.13",
+    "@storybook/addon-ondevice-knobs": "^4.1.13",
+    "@storybook/addon-ondevice-notes": "^4.1.13",
+    "@storybook/addons": "^4.1.13",
+    "@storybook/react-native": "^4.1.13",
+    "@babel/cli": "7.2.3",
+    "@babel/core": "7.3.4",
+    "@babel/preset-env": "7.3.4",
+    "@babel/preset-react": "7.0.0",
+    "@babel/register": "7.0.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "24.1.0",
+    "babel-eslint": "10.0.1",
+    "babel-loader": "8.0.5",
+    "babel-plugin-lodash": "3.3.4",
+    "babel-plugin-react-intl": "3.0.1",
+    "babel-plugin-react-transform": "3.0.0",
+    "babel-plugin-styled-components": "1.10.0",
+    "babel-plugin-transform-react-remove-prop-types": "0.4.24",
+    "eslint": "5.14.1",
+    "eslint-config-airbnb": "17.1.0",
+    "eslint-config-airbnb-base": "13.1.0",
+    "eslint-config-prettier": "4.1.0",
+    "eslint-import-resolver-webpack": "0.11.0",
+    "eslint-plugin-import": "2.16.0",
+    "eslint-plugin-jsx-a11y": "6.2.1",
+    "eslint-plugin-prettier": "3.0.1",
+    "eslint-plugin-react": "7.12.4",
+    "eslint-plugin-redux-saga": "1.0.0",
+    "eslint-plugin-flowtype": "^3.2.0",
+    "eslint-plugin-jest": "^22.3.0",
+    "flow-bin": "^0.86.0",
     "jest": "24.1.0",
+    "jest-cli": "24.1.0",
+    "jest-styled-components": "6.3.1",
     "metro-react-native-babel-preset": "0.52.0",
-    "react-test-renderer": "16.6.3"
+    "react-test-renderer": "16.6.3",
+    "prettier": "1.16.4"
   },
   "jest": {
     "preset": "react-native"
+  },
+  "rnpm": {
+    "assets": [
+      "./assets/fonts"
+    ]
+  },
+  "loki": {
+    "diffingEngine": "gm",
+    "configurations": {
+      "ios": {
+        "target": "ios.simulator"
+      },
+      "android": {
+        "target": "android.emulator"
+      }
+    }
   }
 }
