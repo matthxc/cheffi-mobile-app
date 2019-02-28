@@ -5,7 +5,9 @@ import rootSaga from '../sagas';
 import ReduxPersist from '../config/ReduxPersist';
 
 /* ------------- Assemble The Reducers ------------- */
-export const reducers = combineReducers({});
+export const reducers = combineReducers({
+  nav: require('./NavigationRedux').reducer,
+});
 
 export default () => {
   let finalReducers = reducers;

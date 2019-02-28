@@ -2,12 +2,10 @@
 import { AsyncStorage } from 'react-native';
 import { persistStore } from 'redux-persist';
 import ReduxPersist from '../config/ReduxPersist';
-import rootSaga from '../sagas';
 import DebugConfig from '../config/DebugConfig';
 
 const updateReducers = (store: Object) => {
   const { reducerVersion } = ReduxPersist;
-  const startup = () => store.dispatch(rootSaga());
 
   // Check to ensure latest reducer version
   AsyncStorage.getItem('reducerVersion')
@@ -25,14 +23,14 @@ const updateReducers = (store: Object) => {
           });
         }
         // Purge store
-        persistStore(store, null, startup).purge();
+        persistStore(store, null).purge();
         AsyncStorage.setItem('reducerVersion', reducerVersion);
       } else {
-        persistStore(store, null, startup);
+        persistStore(store, null);
       }
     })
     .catch(() => {
-      persistStore(store, null, startup);
+      persistStore(store, null);
       AsyncStorage.setItem('reducerVersion', reducerVersion);
     });
 };
