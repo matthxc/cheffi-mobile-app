@@ -2,9 +2,12 @@ import './config';
 import React, { Component } from 'react';
 import { StyleSheet, View, StatusBar } from 'react-native';
 import { Provider } from 'react-redux';
+import { Root, StyleProvider } from 'native-base';
 import ReduxNavigation from './navigation/ReduxNavigation';
 import DebugConfig from './config/DebugConfig';
 import createStore from './redux';
+import getTheme from './theme/native-base-theme/components';
+import platform from './theme/native-base-theme/variables/platform';
 
 // create our store
 const store = createStore();
@@ -22,10 +25,14 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <View style={styles.container}>
-          <StatusBar barStyle="light-content" />
-          <ReduxNavigation />
-        </View>
+        <StyleProvider style={getTheme(platform)}>
+          <Root>
+            <View style={styles.container}>
+              <StatusBar barStyle="light-content" />
+              <ReduxNavigation />
+            </View>
+          </Root>
+        </StyleProvider>
       </Provider>
     );
   }
