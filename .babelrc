@@ -1,6 +1,6 @@
 {
   "presets": ["module:metro-react-native-babel-preset"],
-  "plugins": ["styled-components"],
+  "plugins": ["babel-plugin-styled-components"],
   "env": {
     "production": {
       "plugins": ["lodash", "transform-react-remove-prop-types"]

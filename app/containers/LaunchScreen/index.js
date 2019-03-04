@@ -2,7 +2,12 @@
 
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Container, Content, Button, Text } from 'native-base';
+import { Container, Content, Button as NButton, Text } from 'native-base';
+import styled from 'styled-components/native';
+
+const Button = styled(NButton)`
+  align-self: center;
+`;
 
 type Props = {};
 class LaunchScreen extends Component<Props> {
@@ -12,7 +17,7 @@ class LaunchScreen extends Component<Props> {
         <Content contentContainerStyle={styles.container}>
           <View style={styles.container}>
             <Text style={styles.title}>Launch Screen!</Text>
-            <Button style={styles.button}>
+            <Button>
               <Text>Example Button</Text>
             </Button>
           </View>
@@ -36,9 +41,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
     margin: 10,
-  },
-  button: {
-    alignSelf: 'center',
   },
 });
 
