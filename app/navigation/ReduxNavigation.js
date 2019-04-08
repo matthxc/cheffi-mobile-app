@@ -3,14 +3,14 @@ import * as React from 'react';
 import { BackHandler, Platform } from 'react-native';
 import {
   createReactNavigationReduxMiddleware,
-  reduxifyNavigator,
+  createReduxContainer,
 } from 'react-navigation-redux-helpers';
 import { connect } from 'react-redux';
 import AppNavigation from './AppNavigation';
 
-createReactNavigationReduxMiddleware('root', state => state.nav);
+createReactNavigationReduxMiddleware(state => state.nav);
 
-const ReduxAppNavigator = reduxifyNavigator(AppNavigation, 'root');
+const ReduxAppNavigator = createReduxContainer(AppNavigation, 'root');
 
 type Props = {
   dispatch: void,

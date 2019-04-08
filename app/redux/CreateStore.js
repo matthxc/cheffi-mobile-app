@@ -15,7 +15,6 @@ export default (rootReducer, rootSaga) => {
 
   /* ------------- Navigation Middleware ------------ */
   const navigationMiddleware = createReactNavigationReduxMiddleware(
-    'root',
     state => state.nav,
   );
   middleware.push(navigationMiddleware);
@@ -36,10 +35,8 @@ export default (rootReducer, rootSaga) => {
   enhancers.push(applyMiddleware(...middleware));
 
   // if Reactotron is enabled (default for __DEV__), we'll create the store through Reactotron
-  const createAppropriateStore = Config.useReactotron
-    ? console.tron.createStore
-    : createStore;
-  const store = createAppropriateStore(rootReducer, compose(...enhancers));
+  if (Config.useReactotron) enhancers.push(console.tron.createEnhancer());
+  const store = createStore(rootReducer, compose(...enhancers));
 
   // configure persistStore and check reducer version number
   if (ReduxPersist.active) {
